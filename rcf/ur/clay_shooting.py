@@ -11,7 +11,7 @@ ROBOT_L_SPEED = 0.2  # m/s
 ROBOT_ACCEL = 0.2  # m/s2
 ROBOT_SAFE_J_SPEED = .15
 ROBOT_J_SPEED = .6
-BLEND_RADIUS_PUSHING = .002  # m
+BLEND_RADIUS_PUSHING = .015  # m
 
 # Tool related variables      ###
 TOOL_HEIGHT = 192  # mm
@@ -102,10 +102,14 @@ def _push_moves(plane, push_conf, vertical_offset_bool):
 
     offset_plane.Translate(direction * -dist)
 
+    pt = plane.Origin.Clone()
+    pt += rot_axis * -10
+    pt += rg.Vector3d(0,0,-3)
+
     for i in range(n):
         rot_plane = offset_plane.Clone()
 
-        rot_plane.Rotate(m.radians((i + 1) * angle_step), rot_axis, plane.Origin)
+        rot_plane.Rotate(m.radians((i + 1) * angle_step), rot_axis, pt)
 
         script += _default_movel(rot_plane, blend_radius=BLEND_RADIUS_PUSHING)
 
